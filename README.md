@@ -1,3 +1,26 @@
+# rustguess — A Number-Guessing Game in the Linux Kernel
+
+A Linux kernel module that runs a number-guessing game at `/dev/rustguess`, written entirely in safe Rust. This is a small example of a stateful, user-driven protocol at Ring 0.
+
+## Demo
+
+```
+$ sudo cat /dev/rustguess
+Welcome! Guess a number between 1 and 100. `echo N > /dev/rustguess`, then `cat /dev/rustguess`.
+
+$ echo 50 | sudo tee /dev/rustguess > /dev/null
+$ sudo cat /dev/rustguess
+50 is too high -- guess lower.
+
+$ echo 25 | sudo tee /dev/rustguess > /dev/null
+$ sudo cat /dev/rustguess
+25 is too low -- guess higher.
+
+$ echo 42 | sudo tee /dev/rustguess > /dev/null
+$ sudo cat /dev/rustguess
+Correct! You got it in 3 tries.
+```
+
 ## What This Is
 
 `rustguess` is an out-of-tree Linux kernel module that exposes a character device at `/dev/rustguess`. Users write guesses to the device and read hints back. The game state is mutex-protected across all opens of the device. Malformed input is handled with a friendly error message rather than a kernel panic.
@@ -5,11 +28,13 @@
 ## Build & Run
 
 ### Requirements
+
 - Ubuntu 26.04 LTS (kernel 7.0.0 with `CONFIG_RUST=y`)
 - `rustc 1.93` (kernel-blessed version)
 - `linux-headers` and `linux-source` for your kernel version
 
 ### Setup
+
 ```bash
 sudo apt install -y build-essential linux-headers-$(uname -r) kmod \
     rustc-1.93 rust-1.93-src bindgen clang llvm lld \
@@ -18,6 +43,7 @@ sudo update-alternatives --install /usr/bin/rustc rustc /usr/bin/rustc-1.93 100
 ```
 
 Build the kernel Rust support files:
+
 ```bash
 cd /usr/src
 sudo tar -xjf linux-source-7.0.0.tar.bz2
@@ -28,6 +54,7 @@ sudo ln -s /usr/src/linux-source-7.0.0/rust /usr/src/linux-headers-7.0.0-14-gene
 ```
 
 ### Build and Load
+
 ```bash
 git clone https://github.com/eliassegura100/Random-Guesser-Rust.git
 cd Random-Guesser-Rust
@@ -36,6 +63,7 @@ sudo insmod rustguess.ko
 ```
 
 ### Play
+
 ```bash
 sudo cat /dev/rustguess          # read welcome message
 echo 50 | sudo tee /dev/rustguess > /dev/null
@@ -43,6 +71,7 @@ sudo cat /dev/rustguess          # get a hint
 ```
 
 ### Unload
+
 ```bash
 sudo rmmod rustguess
 ```
