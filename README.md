@@ -103,3 +103,27 @@ Finally look at `read_iter()` — this is where the last response message is cop
 ## License
 
 Licensed GPL-2.0 to match the Linux kernel.
+
+#Demo
+
+```bash
+ubuntu@hw5:~/Random-Guesser-Rust$ make
+make -C /lib/modules/7.0.0-14-generic/build M=/home/ubuntu/Random-Guesser-Rust modules
+make[1]: Entering directory '/usr/src/linux-headers-7.0.0-14-generic'
+make[2]: Entering directory '/home/ubuntu/Random-Guesser-Rust'
+make[2]: Leaving directory '/home/ubuntu/Random-Guesser-Rust'
+make[1]: Leaving directory '/usr/src/linux-headers-7.0.0-14-generic'
+ubuntu@hw5:~/Random-Guesser-Rust$ sudo insmod rustguess.ko
+ubuntu@hw5:~/Random-Guesser-Rust$ sudo cat /dev/rustguess
+Welcome! Guess a number between 1 and 100. `echo N > /dev/rustguess`, then `cat /dev/rustguess`.
+ubuntu@hw5:~/Random-Guesser-Rust$ echo 50 | sudo tee /dev/rustguess > /dev/null
+ubuntu@hw5:~/Random-Guesser-Rust$ sudo cat /dev/rustguess
+50 is too high -- guess lower.
+ubuntu@hw5:~/Random-Guesser-Rust$ echo 40 | sudo tee /dev/rustguess > /dev/null
+ubuntu@hw5:~/Random-Guesser-Rust$ sudo cat /dev/rustguess
+40 is too low -- guess higher.
+ubuntu@hw5:~/Random-Guesser-Rust$ echo 42 | sudo tee /dev/rustguess > /dev/null
+ubuntu@hw5:~/Random-Guesser-Rust$ sudo cat /dev/rustguess
+Correct! You got it in 3 tries.
+```
+
