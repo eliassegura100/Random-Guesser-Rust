@@ -4,7 +4,7 @@ A Linux kernel module that runs a number-guessing game at `/dev/rustguess`, writ
 
 ## Demo
 
-```
+```bash
 $ sudo cat /dev/rustguess
 Welcome! Guess a number between 1 and 100. `echo N > /dev/rustguess`, then `cat /dev/rustguess`.
 
